@@ -1,0 +1,42 @@
+version: "3.1"
+
+services:
+
+  tyk_gateway:
+    image: tykio/tyk-gateway:latest
+    restart: always
+    networks:
+      - tyk-service-bridge
+    volumes:
+      - /Users/liuhaigang/docker/tyk/tyk/apps:/opt/tyk-gateway/apps
+      - /Users/liuhaigang/docker/tyk/tyk/tyk.conf:/opt/tyk-gateway/tyk.conf
+    depends_on:
+      - tyk_dashboard
+
+  tyk_dashboard:
+    image: tykio/tyk-dashboard
+    restart: always
+    networks:
+      - tyk-service-bridge
+    ports:
+      - 3000:3000
+    depends_on:
+      - mongo
+      - redis
+
+  mongo:
+    image: mongo
+    restart: always
+    networks:
+      - tyk-service-bridge
+
+  redis:
+    image: redis:4.0-alpine
+    restart: always
+    networks:
+      - tyk-service-bridge
+
+networks:
+  tyk-service-bridge:
+    driver: bridge
+
