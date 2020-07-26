@@ -48,7 +48,7 @@ func uuidv4() string {
 	return fmt.Sprintf("%s", uuid.New())
 }
 
-var master_password_seed = "com.lyndir.masterpassword"
+var main_password_seed = "com.lyndir.mainpassword"
 
 var password_type_templates = map[string][][]byte{
 	"maximum": {[]byte("anoxxxxxxxxxxxxxxxxx"), []byte("axxxxxxxxxxxxxxxxxno")},
@@ -82,7 +82,7 @@ func derivePassword(counter uint32, password_type, password, user, site string) 
 	}
 
 	var buffer bytes.Buffer
-	buffer.WriteString(master_password_seed)
+	buffer.WriteString(main_password_seed)
 	binary.Write(&buffer, binary.BigEndian, uint32(len(user)))
 	buffer.WriteString(user)
 
@@ -92,7 +92,7 @@ func derivePassword(counter uint32, password_type, password, user, site string) 
 		return fmt.Sprintf("failed to derive password: %s", err)
 	}
 
-	buffer.Truncate(len(master_password_seed))
+	buffer.Truncate(len(main_password_seed))
 	binary.Write(&buffer, binary.BigEndian, uint32(len(site)))
 	buffer.WriteString(site)
 	binary.Write(&buffer, binary.BigEndian, counter)
